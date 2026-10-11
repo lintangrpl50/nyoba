@@ -1,0 +1,149 @@
+/* ---------- Dasar ---------- */
+* { box-sizing: border-box; margin: 0; }
+
+:root {
+  --latar: #2a1b3d;
+  --krim: #fff8f0;
+  --kue-atas: #e27a9d;
+  --kue-bawah: #c0507a;
+  --piring: #e8e2f0;
+  --api-luar: #fb5607;
+  --api-tengah: #ffb703;
+  --api-dalam: #fff3b0;
+}
+
+body {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background: var(--latar);
+  font-family: Georgia, "Times New Roman", serif;
+  color: #f3e9ff;
+  text-align: center;
+}
+
+main {
+  display: grid;
+  justify-items: center;
+  gap: 1.25rem;
+  padding: 2rem 1rem;
+}
+
+h1 { font-size: 1.6rem; }
+main p { font-size: 0.95rem; color: #c9b8e0; }
+
+/* ---------- Kue ---------- */
+.kue {
+  position: relative;      /* induk untuk semua bagian yang absolute */
+  width: 280px;
+  height: 260px;
+  margin-top: 2rem;
+}
+
+.piring {
+  position: absolute;
+  bottom: 0;
+  left: -20px;
+  width: 320px;
+  height: 18px;
+  background: var(--piring);
+  border-radius: 50%;
+}
+
+.lapis {
+  position: absolute;
+  overflow: hidden;        /* supaya krim tidak keluar dari sudut bulat */
+}
+
+.lapis-bawah {
+  bottom: 9px;
+  left: 0;
+  width: 280px;
+  height: 100px;
+  background: var(--kue-bawah);
+  border-radius: 12px 12px 6px 6px;
+}
+
+.lapis-atas {
+  bottom: 109px;
+  left: 40px;
+  width: 200px;
+  height: 80px;
+  background: var(--kue-atas);
+  border-radius: 12px;
+}
+
+/* Krim putih di bagian atas tiap lapis */
+.lapis::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 20px;
+  background: var(--krim);
+}
+
+/* Krim yang "meleleh": deretan lingkaran dari radial-gradient */
+.lapis::after {
+  content: "";
+  position: absolute;
+  top: 20px;
+  left: 0;
+  width: 100%;
+  height: 18px;
+  background: radial-gradient(circle at 15px 0, var(--krim) 14px, transparent 15px);
+  background-size: 30px 18px;
+  background-repeat: repeat-x;
+}
+
+/* ---------- Lilin ---------- */
+.lilin {
+  position: absolute;
+  bottom: 189px;           /* tepat di atas lapis atas */
+  width: 10px;
+  height: 44px;
+  border-radius: 3px 3px 0 0;
+  background: repeating-linear-gradient(
+    -45deg, #8ecae6 0 6px, #ffffff 6px 12px
+  );
+}
+
+.lilin-1 { left: 95px; }
+.lilin-2 { left: 135px; }
+.lilin-3 { left: 175px; }
+
+/* ---------- Api ---------- */
+.api {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  width: 14px;
+  height: 24px;
+  margin-left: -7px;
+  background: radial-gradient(
+    ellipse at 50% 70%,
+    var(--api-dalam), var(--api-tengah) 55%, var(--api-luar)
+  );
+  border-radius: 50% 50% 50% 50% / 70% 70% 30% 30%;
+  box-shadow: 0 0 14px 4px rgba(255, 183, 3, 0.55);
+  transform-origin: bottom center;
+  animation: berkedip 0.9s ease-in-out infinite;
+  transition: opacity 0.3s;
+}
+
+.lilin-2 .api { animation-delay: -0.3s; }
+.lilin-3 .api { animation-delay: -0.6s; }
+
+@keyframes berkedip {
+  0%, 100% { transform: scale(1, 1) rotate(-2deg); }
+  50%      { transform: scale(0.92, 1.12) rotate(2deg); }
+}
+
+/* Tiup lilin: api hilang saat kue di-hover */
+.kue:hover .api { opacity: 0; }
+
+/* Hormati pengguna yang mematikan animasi */
+@media (prefers-reduced-motion: reduce) {
+  .api { animation: none; }
+}
